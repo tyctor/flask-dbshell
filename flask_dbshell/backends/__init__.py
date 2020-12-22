@@ -1,4 +1,5 @@
 import subprocess
+from importlib import import_module
 
 
 def load_backend(dburl):
@@ -17,7 +18,7 @@ def load_backend(dburl):
     module_name = dburl.backend
     class_name = dburl.backend.capitalize() + 'Backend'
     try:
-        module = __import__(module_name, globals(), locals())
+        module = import_module(f'flask_dbshell.backends.{module_name}')
     except ImportError as e:
         raise UnknownBackendError('Unknown backend: "%s"' % dburl.backend)
     backend_cls = getattr(module, class_name)
